@@ -64,8 +64,9 @@ const button = document.querySelector("button");
   });
 
 
-
-profilePic.src = localStorage.imgsrc;
+if(localStorage.imgsrc !== undefined){
+    profilePic.src = localStorage.imgsrc;
+}
 
 
 
