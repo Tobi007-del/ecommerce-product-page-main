@@ -35,12 +35,12 @@ document.getElementById("cart").addEventListener('click',()=>{
     if(toucher == 1){
         noOfItems.classList.add('hover');
         cart.classList.add('hover');
-        document.getElementById("cart-dropdown").classList.add('hover');
+        document.getElementById("cart-dropdown").style.display = "flex";
     } else {
         toucher = 0;
         noOfItems.classList.remove('hover');
         cart.classList.remove('hover');
-        document.getElementById("cart-dropdown").classList.remove('hover');
+        document.getElementById("cart-dropdown").style.display = "none";
     }
 })
 

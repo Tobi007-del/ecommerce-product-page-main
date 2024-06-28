@@ -931,9 +931,6 @@ body{
         transform: translateX(0)!important;
         transform: scale(1)!important;
     }
-    #cart-dropdown.hover{
-        display: flex!important;
-    }
     #cart.hover{
         fill: black!important;
         transform: translateX(0)!important;
