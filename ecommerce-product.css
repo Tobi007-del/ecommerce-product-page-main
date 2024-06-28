@@ -249,12 +249,13 @@ body{
 #no-of-items{
     display: none;
     background-color: hsl(26, 100%, 55%);
-    font-size: 1.25dvh;
+    font-size: 0.5em;
+    padding: 0.1em;
     color: white;
     border-radius: 40%;
     min-width: 1.45em; 
     max-width: fit-content;
-    height: 1.125em;
+    min-height: 1.125em;
     text-align: center;
     position: relative;
     z-index: 1;
@@ -279,16 +280,16 @@ body{
         transform: scale(1.1);
     }
     70%{
-        transform: rotate(-90deg) translateY(5px) scale(0.9) translateX(0px);
+        transform: rotate(-90deg) translateY(3px) scale(0.9) translateX(0px);
     }
     80%{
-        transform: rotate(10deg) translateY(5px)translateX(11px);
+        transform: rotate(10deg) translateY(3px)translateX(11px);
     }
     90%{
-        transform: rotate(10deg) translateY(5px)translateX(11px);
+        transform: rotate(10deg) translateY(3px)translateX(11px);
     }
     95%{
-        transform: rotate(-10deg) translateY(5px)translateX(11px);
+        transform: rotate(-10deg) translateY(3px)translateX(11px);
     }
 }
 #cart-dropdown{
@@ -351,10 +352,10 @@ body{
     font-size: 0.85em;
     color:hsl(219, 9%, 45%);
     position: relative;
-    top: 0.85em;
+    top: 0.5em;
 }
 #cart-price{
-    font-size: 1em;
+    font-size: 0.85em;
     display: flex;
     color:hsl(219, 9%, 45%);
     gap: 0.35em;
@@ -937,10 +938,11 @@ body{
         display: none;
     }
     #no-of-items{
-        font-size: 1dvh;
+        font-size: 1.05dvh;
         border-radius: 40%;
         min-width: 1.5dvh; 
-        height: 1.2dvh;
+        height: auto;
+        padding: 0.05dvh;
     }
     #cart-dropdown{
         top: 7.5dvh;
@@ -977,15 +979,15 @@ body{
     }
     #cart-product-name{
         font-size: 4.05vw;
-        top: 2.75vw;
+        top: 2.15vw;
     }
     #cart-price{
-        font-size: 4.05vw;
-        gap: 2vw;
-        bottom: 3.5vw;
+        font-size: 3.8vw;
+        gap: 1vw;
+        bottom: 3.25vw;
     }
     #delete-cart{
-        right: 4vw;
+        right: 5.05vw;
         transform: scale(1.25);
     }
     #delete-cart:active{

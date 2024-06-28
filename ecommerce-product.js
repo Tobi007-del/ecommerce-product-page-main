@@ -1,49 +1,268 @@
-const add = document.getElementById("add");
-const minus = document.getElementById("minus");
-const cartNumber = document.getElementById("cart-number");
-const addToCartButton = document.getElementById("add-to-cart");
-const cart = document.getElementById("cart");
-const noOfItems = document.getElementById("no-of-items");
-const emptyCart = document.getElementById("empty-cart");
-const fullCart = document.getElementById("full-cart");
-const noOfCartItems = document.getElementById("no-of-cart-items");
-const noOfOrderedItems = document.getElementById("no-of-ordered-items");
-const totalCartPrice = document.getElementById("total-cart-price");
-const orderPrice = document.getElementById("order-price");
-const deleteCart = document.getElementById("delete-cart");
-const deleteItems = document.getElementById("delete-items");
-const addToCartButtonText = document.getElementById("add-to-cart-text");
-const addToCartCart = document.getElementById("add-to-cart-cart");
-const smallPics = document.querySelectorAll(".small-pics");
-const bigPics = document.querySelectorAll(".big-pics");
-const lightBox = document.getElementById("light-box");
-const lightBoxMains = document.querySelectorAll(".light-box-main");
-const lightBoxSubs = document.querySelectorAll(".light-box-sub")
-const prev = document.getElementById("prev");
-const next = document.getElementById("next");
-const close = document.getElementById("close");
-const checkOut = document.getElementById("check-out");
-const checkOutContent = document.getElementById("check-out-content");
-const cartTitle = document.getElementById("cart-title");
-const profilePicPicker = document.getElementById("profile-pic-picker");
-const profilePic = document.getElementById("profile-pic");
-const Stock = document.getElementById("left-in-stock");
+//#VANILLA JAVASCRIPT ONLY
 
-var toucher = 0;
+
+//declaration of variables, doesn't have to be done at the top though since variables are hoisted in javascript, it's just preference
+// EVERYTHING IS STORED IN VARIABLES AND CAN BE HIGHLY CUSTOMISABLE
+//CUSTOMISABLE VARIABLES
+var CP = 32550,//COST PRICE
+D = 30,//DISCOUNT
+AP = parseFloat(CP / ((100-D)/100)),//ACTUAL PRICE
+TS = 70,//TOTAL STOCK: TOTAL NUMBER OF ITEMS IN STOCK #should be greater than MAX,MIN and MNI values
+MAX = 10,//MAXIMUM NUMBER OF ITEMS THAT CAN BE ADDED TO CART AT A TIME
+MIN = 1,//MINIMUM NUMBER OF ITEMS THAT CAN BE ADDED TO CART AT A TIME #should not be more than the MAX value
+MNI = MIN,//MINIMUM NUMBER OF ITEMS THAT CAN BE BOUGHT, DEFAULT IS MIN VALUE #independent of MAX or MIN value
+//NOTE: CURRENCY HAS TO BE SUPPORTED BY THE ISO 4217 CURRENCY CODES
+CY = 'NGN',//CURRENCY
+// var CY = "\u20A6";
+// var CY = "$";
+
+//NON-CUSTOMISABLE VARIABLES
+AM = MAX,//ADDMAX: maximum number of items that can be added to cart at real time
+MM = MIN,//MINMINUS: mimimum number of items that can be added to cart at real time
+TP = 0,//TOTAL PRICE: total price of items at real time
+TCN = 0,//TOTAL CART NUMBER: total number of items in cart at real time
+CN = MNI,//CART NUMBER: this variable stores the cn at real time 
+SL = TS,//STOCK LEFT: this variable stores the number of items left in stock
+MSL = SL,//MIN STOCK LEFT: this variable stores the number of items left in stock at real time
+CC = 0,//CLICK COUNTER: handles just the first click of the add to cart button
+FO = localStorage.totalorder,//FORMER ORDER: pre-existing order being fetched from localStorage if present
+ISL = TS,//INITIAL STOCK LEFT: number of items left in stock at the time the user enters the page
+f = 0,//a value used to know if the user session just started or not to prevent miscalculation
+SIN = 1;//SLIDE INDEX: used to control the image being shown at the current time
+
+
+//declaring constants for DOM manipulation
+const add = document.getElementById("add"),
+minus = document.getElementById("minus"),
+cn = document.getElementById("cart-number"),
+atcb = document.getElementById("add-to-cart"),
+cart = document.getElementById("cart"),
+noi = document.getElementById("no-of-items"),
+ec = document.getElementById("empty-cart"),
+fc = document.getElementById("full-cart"),
+noci = document.getElementById("no-of-cart-items"),
+nooi = document.getElementById("no-of-ordered-items"),
+tcp = document.getElementById("total-cart-price"),
+op = document.getElementById("order-price"),
+dc = document.getElementById("delete-cart"),
+di = document.getElementById("delete-items"),
+atcbt = document.getElementById("add-to-cart-text"),
+atcc = document.getElementById("add-to-cart-cart"),
+sps = document.querySelectorAll(".small-pics"),
+bps = document.querySelectorAll(".big-pics"),
+lb = document.getElementById("light-box"),
+lbm = document.querySelectorAll(".light-box-main"),
+lbss = document.querySelectorAll(".light-box-sub"),
+prev = document.getElementById("prev"),
+next = document.getElementById("next"),
+close = document.getElementById("close"),
+co = document.getElementById("check-out"),
+coc = document.getElementById("check-out-content"),
+ct = document.getElementById("cart-title"),
+ppp = document.getElementById("profile-pic-picker"),
+pp = document.getElementById("profile-pic"),
+Stock = document.getElementById("left-in-stock");
+
+
+//DOM manipulation functions for the text content of the stock text element
+//stock function called after the itmes have been added to cart
+const stock = (e) => {
+    if(e === 0){
+        Stock.innerHTML = "";
+        document.getElementById("stock-text").innerHTML = "Out of Stock";
+    } else{
+        document.getElementById("stock-text").innerHTML = "In Stock";
+        Stock.innerHTML = e;
+    }
+}
+//real time stock function for the plus and minus button before items have been added to cart
+const RTstock = (e) => {
+    if(e === 0){
+        Stock.innerHTML = "";
+        if(parseInt(cn.innerHTML) === 0){
+            document.getElementById("stock-text").innerHTML = "Out of Stock";
+        } else{
+            document.getElementById("stock-text").innerHTML = "0 left in Stock";
+        }
+    } else {
+        document.getElementById("stock-text").innerHTML = "left In Stock";
+        Stock.innerHTML = e;
+    }
+}
+
+
+//function to get pre-existing order from the local storage if any
+function getExistingOrder(){
+if (FO === undefined){
+    FO = 0;
+} 
+
+FO = parseInt(FO);
+if(FO > 0 && f === 0){
+    TCN = FO;
+    ISL = TS - TCN;
+    stock(ISL);
+    TP = TP + (CP * TCN)
+    tcp.textContent = CPV(TP);
+    op.textContent = CPV(TP);
+    noi.textContent = TCN;
+    nooi.textContent = TCN;
+    noci.textContent = `x ${TCN}`;
+    if(TCN > 1){
+    di.title = `Remove ${TCN} items from cart`;
+    }
+    else {
+    di.title = `Remove ${TCN} item from cart`;
+    }
+    ec.style.display = "none";
+    fc.style.display = "flex";
+    noi.style.display = "block"; 
+    noi.style.animationName = "happy-ball";
+    cart.style.animationName = "happy-cart";
+    cart.classList.add('active');
+    if(TCN >= TS)
+    {
+        atcbt.innerHTML = "Out of Stock";
+        atcc.style.transform = "rotate(80deg)";
+        atcb.style.opacity = "0.7";
+        CartButton(atcb);
+        cn.innerHTML = 0;
+        add.classList.remove("hover");
+    }
+    if(ISL > MIN){
+        CN = MIN;
+        cn.innerHTML = CN;
+    } else{
+        CN = ISL;
+        cn.innerHTML = CN;
+    }
+} else{
+    if(MIN !== MNI){
+    cn.innerHTML = MNI;
+    stock(SL);
+    } else {
+    cn.innerHTML = MIN;
+    stock(SL);
+    }
+}
+}
+window.onloadstart = getExistingOrder()
+
+//function to calculate price value
+function CPV(C){
+    //using number format API to format the price values for standardization of currency and to prevent loss
+    const WN = new Intl.NumberFormat('en',{
+        style:'currency',
+        currency: CY,
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0,
+    })
+    const F = new Intl.NumberFormat('en',{
+        style:'currency',
+        currency: CY,
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+    })
+    const FO = new Intl.NumberFormat('en',{
+        style:'currency',
+        currency: CY,
+        minimumFractionDigits: 1,
+        maximumFractionDigits: 2,
+    })
+    let th = C/1000,
+        tth = C/10000,
+        hth = C/100000,
+        m = C/1000000,
+        b = C/1000000000,
+        tr = C/1000000000000;
+    if((th < 1) && (tth < 1) && (hth < 1) && (m < 1) && (b < 1) && (tr < 1)){
+        if(((C) - Math.floor(C)) !== 0){
+            return `${F.format(C)}`;
+        } else {
+            return `${F.format(C)}`;
+        }
+    } else if((th >= 1) && (tth < 1) && (hth < 1) && (m < 1) && (b < 1) && (tr < 1)){
+        if(((C) - Math.floor(C)) !== 0){
+            return `${F.format(C)}`;
+        } else {
+            return `${WN.format(C)}`;
+        }
+    } else if((tth >= 1) && (th > 1) && (hth < 1) && (m < 1) && (b < 1) && (tr < 1)){
+        if(((C) - Math.floor(C)) !== 0){
+            return `${FO.format(C)}`;
+        } else {
+            return `${WN.format(C)}`;
+        }
+    } else if((hth >= 1) && (th > 1) && (tth > 1) && (m < 1) && (b < 1) && (tr < 1)){
+        if(((th) - Math.floor(th)) !== 0){
+            return `${F.format(th)}K`;
+        } else {
+            return `${WN.format(th)}K`;
+        }
+    } else if((m >= 1) && (th > 1) && (tth > 1) && (hth > 1) && (b < 1) && (tr < 1)){
+        if(((m) - Math.floor(m)) !== 0){
+            return `${FO.format(m)}M`;
+        } else {
+            return `${WN.format(m)}M`;
+        }        
+    } else if((b >= 1) && (th > 1) && (tth > 1) && (hth > 1) && (m > 1) && (tr < 1)){
+        if(((b) - Math.floor(b)) !== 0){
+            return `${FO.format(b)}B`;
+        } else {
+            return `${WN.format(b)}B`;
+        }        
+    } else if((tr >= 1) && (th > 1) && (tth > 1) && (hth > 1) && (m > 1) && (b > 1)){
+        if(((tr) - Math.floor(tr)) !== 0){
+            return `${FO.format(tr)}T`;
+        } else {
+            return `${WN.format(tr)}T`;
+        }        
+    }
+}
+
+//function to round data off to a fixed decimal point depending on the number
+function RD(d){
+    if((d - Math.floor(d)) !== 0){
+        return d.toFixed(2)
+    } else {
+        return d.toFixed()
+    }
+}
+
+//DOM manipulation to fill in all the default price values on the page at startup
+function insertPriceValues(){
+document.getElementById("current-price").innerHTML = CPV(CP);
+document.getElementById("discount").innerHTML = `${RD(D)}% Off`;
+document.getElementById("actual-price").innerHTML = CPV(AP)
+document.getElementById("actual-price").setAttribute("data-length", CPV(AP))
+document.getElementById("cart-price-value").innerHTML = CPV(CP);
+}
+window.onloadstart = insertPriceValues()
+
+//setting the hover state of the add button on page start
+if((MAX > MIN) && (MAX > MNI) && (FO === 0) && (f === 0)){
+    add.classList.add("hover");
+ } else if((FO > 0) && (f === 0)){
+    add.classList.add("hover");
+}
+
+//adding click event listener for the cart on phones
+var TCH = 0;
 document.getElementById("cart").addEventListener('click',()=>{
-    toucher ++;
-    if(toucher == 1){
-        noOfItems.classList.add('hover');
+    TCH ++;
+    if(TCH == 1){
+        noi.classList.add('hover');
         cart.classList.add('hover');
         document.getElementById("cart-dropdown").classList.add('hover');
     } else {
-        toucher = 0;
-        noOfItems.classList.remove('hover');
+        TCH = 0;
+        noi.classList.remove('hover');
         cart.classList.remove('hover');
         document.getElementById("cart-dropdown").classList.remove('hover');
     }
 })
 
+//adding click event listener for the hamburger icon on phones
 document.getElementById("hamburger-icon").addEventListener('click',()=>{
     document.getElementById('nav-menu-container').style.display = "flex";
 })
@@ -52,6 +271,7 @@ document.getElementById("close-menu").addEventListener('click',()=>{
     document.getElementById('nav-menu-container').style.display = "none";
 })
 
+//registering the service worker to enable the notification feature usiing an asynchronous function
 async function registerServiceWorker(){
     if("serviceWorker" in navigator){
     await navigator.serviceWorker.register('e-service-worker.js').then(function(registration) {
@@ -65,13 +285,11 @@ async function registerServiceWorker(){
     }
 }
 
-
-window.addEventListener("load", () => {
-  
-    checkOut.addEventListener("click", () => {
-        const title = "sneakers.com";
-        const options = {
-            body: `Make a transfer of ${CPV(TP)} to the Zenith Account: 4230814118. Order: ${totalCartNo} Fall Limited Edition Sneakers. `, 
+//adding click event listener to send a notifiaction on checkout using the seviceWorker API  
+    co.addEventListener("click", () => {
+        const tt = "sneakers.com";
+        const ops = {
+            body: `Make a transfer of ${CPV(TP)} to the Zenith Account: 4230814118. Order: ${TCN} Fall Limited Edition Sneakers. `, 
             icon:"/ecommerce-product-page-main/images/image-product-2-thumbnail.jpg", 
             image: "/ecommerce-product-page-main/images/image-product-3.jpg",
             tag: 'renotify',
@@ -80,7 +298,7 @@ window.addEventListener("load", () => {
       if (Notification?.permission === "granted") {
         registerServiceWorker()
         navigator.serviceWorker.ready.then(function(registration) {
-            registration.showNotification(title, options);
+            registration.showNotification(tt, ops);
         });
         }
 
@@ -89,32 +307,31 @@ window.addEventListener("load", () => {
         if (status === "granted") {
             registerServiceWorker()
             navigator.serviceWorker.ready.then(function(registration) {
-            registration.showNotification(title, options);
+            registration.showNotification(tt, ops);
             });
-            alert("You have to give notification permission to get the checkout notification");
+            alert("You have to give notification permission to get the co notification");
           }
         });
       } else {
-        alert("You have to give notification permission to get the checkout notification");
+        alert("You have to give notification permission to get the co notification");
       }
     });
-  });
 
 
+
+//checking local storage for any custom user images 
 if(localStorage.imgsrc !== undefined){
-    profilePic.src = localStorage.imgsrc;
+    pp.src = localStorage.imgsrc;
 }
 
-
-
-
-profilePicPicker.addEventListener('change', showImage);
+//using file reader API to help the user pick a custom image for the profile picture
+ppp.addEventListener('change', showImage);
 function showImage(evt){
-    var files = evt.target.files;
+    var fs = evt.target.files;
 
-    var reader = new FileReader();
-    reader.onload = function(event){
-    var img = profilePic;
+    var r = new FileReader();
+    r.onload = function(event){
+    var img = pp;
     try {
        localStorage.imgsrc = event.target.result;
        img.src = event.target.result;
@@ -122,216 +339,100 @@ function showImage(evt){
     alert(`The image file selected is too large!!`)
     }   
     }
-    reader.readAsDataURL(files[0]);
+    r.readAsDataURL(fs[0]);
 }
 
 
 
-var CP = 32500;
-var discount = 50;
-var AP = parseFloat(CP / (discount/100));
-var TP = 0;
-var totalCartNo = 0;
-var totalStock = 50;
-var MAX = 10;
-var MIN = 1;
-var minItems = MIN;
-var cartNo = minItems;
-var slideIndex = 1;
-var stockLeft = totalStock;
-var addMax = MAX;
-var minMinus = MIN;
-var clickCounter = 0;
-// var CY = "\u20A6";
-// var CY = "$";
-
-
-function RD(d){
-    if((d - Math.floor(d)) !== 0){
-        return discount.toFixed(2)
-    } else {
-        return discount.toFixed()
-    }
-}
-
-function CPV(C){
-    const WN = new Intl.NumberFormat('en',{
-        style:'currency',
-        currency: 'NGN',
-        minimumFractionDigits: 0,
-        maximumFractionDigits: 0,
-    })
-    const F = new Intl.NumberFormat('en',{
-        style:'currency',
-        currency: 'NGN',
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2,
-    })
-    let th,m,b,tr;
-    th = C/1000;
-    hth = C/100000;
-    m = C/1000000;
-    b = C/1000000000;
-    tr = C/1000000000000;
-    if((th < 1) && (hth < 1) (m < 1) && (b < 1) && (tr < 1)){
-        if(((C) - Math.floor(C)) !== 0){
-            return `${F.format(C)}`;
-        } else {
-            return `${F.format(C)}`;
-        }
-    } else if((th >= 1) && (hth < 1) && (m < 1) && (b < 1) && (tr < 1)){
-        if(((C) - Math.floor(C)) !== 0){
-            return `${F.format(C)}`;
-        } else {
-            return `${WN.format(C)}`;
-        }
-    } else if((hth >= 1) && (th > 1) && (m < 1) && (b < 1) && (tr < 1)){
-        if(((th) - Math.floor(th)) !== 0){
-            return `${F.format(th)}K`;
-        } else {
-            return `${WN.format(th)}K`;
-        }
-    } else if((m >= 1) && (th > 1) && (hth > 1) && (b < 1) && (tr < 1)){
-        if(((m) - Math.floor(m)) !== 0){
-            return `${F.format(m)}M`;
-        } else {
-            return `${WN.format(m)}M`;
-        }        
-    } else if((b >= 1) && (th > 1) && (hth > 1) && (m > 1) && (tr < 1)){
-        if(((b) - Math.floor(b)) !== 0){
-            return `${F.format(b)}B`;
-        } else {
-            return `${WN.format(b)}B`;
-        }        
-    } else if((tr >= 1) && (th > 1) && (hth > 1) && (m > 1) && (b > 1)){
-        if(((tr) - Math.floor(tr)) !== 0){
-            return `${F.format(tr)}T`;
-        } else {
-            return `${WN.format(tr)}T`;
-        }        
-    }
-}
-
-document.getElementById("current-price").innerHTML = CPV(CP);
-document.getElementById("discount").innerHTML = `${RD(discount)}% Off`;
-document.getElementById("actual-price").innerHTML = CPV(AP)
-document.getElementById("actual-price").setAttribute("data-length", CPV(AP))
-document.getElementById("cart-price-value").innerHTML = `${CPV(CP)} x`;
-
-
-const stock = (e) => {
-    if(e === 0){
-        Stock.innerHTML = "";
-        document.getElementById("stock-text").innerHTML = "Out of Stock";
-    } else{
-        document.getElementById("stock-text").innerHTML = "In Stock";
-        Stock.innerHTML = e;
-    }
-}
-const RTstock = (e) => {
-    if(e === 0){
-        Stock.innerHTML = "";
-        if(parseInt(cartNumber.innerHTML) === 0){
-            document.getElementById("stock-text").innerHTML = "Out of Stock";
-        } else{
-            document.getElementById("stock-text").innerHTML = "0 left in Stock";
-        }
-    } else {
-        document.getElementById("stock-text").innerHTML = "left In Stock";
-        Stock.innerHTML = e;
-    }
-}
-
+//adding click event listener for the plus button
 add.addEventListener('click', ()=>{
-   stockLeft = totalStock - totalCartNo;
-   if (stockLeft >= MAX){
-     addMax = MAX;
+   SL = TS - TCN;
+   if (SL >= MAX){
+     AM = MAX;
    } else{
-     addMax = stockLeft;
+     AM = SL;
    }
-   addSetting(addMax);
+   as(AM);
 })
-
-function addSetting(x){
-    if((minItems !== MIN) && (minItems >= MAX) && (clickCounter === 0) && (formerOrder === 0)){
-        console.log(`Ain't no way u adding to that number boiii`);
+//function for calculating the value of the cart number and other settings called on the click of the add button 
+function as(x){
+    if((MNI !== MIN) && (MNI >= MAX) && (CC === 0) && (FO === 0)){
         add.classList.remove("hover");
     } else {
-    if(cartNo < x){
-        cartNo ++;
-        cartNumber.innerHTML = cartNo;   
-        RTstock(stockLeft - cartNo);
-        CartButton(addToCartButton);
-        minusOpaque(minus,MIN);
-        addOpaque(add,x);}
-    if(cartNo >= x){
-        cartNo = x;
-        cartNumber.innerHTML = cartNo;
-        console.log(`Ain't no way u adding to that number boiii`);
-        RTstock(stockLeft - cartNo);
-        CartButton(addToCartButton)
-        minusOpaque(minus,MIN);
-        addOpaque(add,x);
-        if(cartNo === 0 ){
-            addToCartButtonText.innerHTML = "Out of Stock";
-            addToCartCart.style.transform = "rotate(80deg)";
-            addToCartButton.style.opacity = "0.7";
+    if(CN < x){
+        CN ++;
+        cn.innerHTML = CN;   
+        RTstock(SL - CN);
+        CartButton(atcb);
+        MO(minus,MIN);
+        AO(add,x);}
+    if(CN >= x){
+        CN = x;
+        cn.innerHTML = CN;
+        RTstock(SL - CN);
+        CartButton(atcb)
+        MO(minus,MIN);
+        AO(add,x);
+        if(CN === 0 ){
+            atcbt.innerHTML = "Out of Stock";
+            atcc.style.transform = "rotate(80deg)";
+            atcb.style.opacity = "0.7";
         }
     }
     }
 }
-minus.addEventListener('click', ()=>{
-    stockLeft = totalStock - totalCartNo;
-    if (stockLeft >= MIN){
-      minMinus = MIN;
-    } else{
-      minMinus = stockLeft;
-    }
-    minusSetting(minMinus);
-})
 
-function minusSetting(x){    
-if((minItems !== MIN) && (cartNo === minItems) && (clickCounter === 0) && (formerOrder === 0)){
-    console.log(`Ain't no way u removing from that number boiii`);
+//adding click event listener for the minus button
+minus.addEventListener('click', ()=>{
+    SL = TS - TCN;
+    if (SL >= MIN){
+      MM = MIN;
+    } else{
+      MM = SL;
+    }
+    ms(MM);
+})
+//function for calculating the value of the cart number and other settings called on the click of the minus button 
+function ms(x){    
+if((MNI !== MIN) && (CN === MNI) && (CC === 0) && (FO === 0)){
     minus.classList.remove("hover")
 } else {
-    if(cartNo > x){
-        if(cartNo === 1){
-            cartNo = 1;
-            cartNumber.innerHTML = 1;
-            console.log(`Ain't no way u removing from that number boiii`);
-            RTstock(stockLeft - cartNo);
-            CartButton(addToCartButton)
-            minusOpaque(minus,1);
-            addOpaque(add,addMax);
+    if(CN > x){
+        if(CN === 1){
+            CN = 1;
+            cn.innerHTML = 1;
+            RTstock(SL - CN);
+            CartButton(atcb)
+            MO(minus,1);
+            AO(add,AM);
         } else {
-            cartNo --;
-            cartNumber.innerHTML = cartNo;
-            RTstock(stockLeft - cartNo);
-            CartButton(addToCartButton);
-            minusOpaque(minus,x);
-            addOpaque(add,addMax);
+            CN --;
+            cn.innerHTML = CN;
+            RTstock(SL - CN);
+            CartButton(atcb);
+            MO(minus,x);
+            AO(add,AM);
         }
     }
 }
 }
 
-
-function CartButton(button) {
-    button.addEventListener('mouseover', ()=>{
-    button.style.opacity = "0.8";
+//cart button function for setting the hover state
+function CartButton(btn) {
+    btn.addEventListener('mouseover', ()=>{
+    btn.style.opacity = "0.8";
 })
-    button.addEventListener('mouseout', ()=> {
-    button.style.opacity = "1.0";
-    if(parseInt(cartNumber.innerHTML) === 0) {
-    button.style.opacity = "0.8";
+    btn.addEventListener('mouseout', ()=> {
+    btn.style.opacity = "1.0";
+    if(parseInt(cn.innerHTML) === 0) {
+    btn.style.opacity = "0.8";
     }
 })}
-
-function addOpaque(ad,n) {
-    if(cartNo < n)
+//add button function for setting the hover state
+function AO(ad,n) {
+    if(CN < n)
     { 
-    if(parseInt(cartNumber.innerHTML) === 0){
+    if(parseInt(cn.innerHTML) === 0){
         ad.classList.remove("hover");   
     } else{
         ad.classList.add("hover");
@@ -340,8 +441,9 @@ function addOpaque(ad,n) {
         ad.classList.remove("hover");   
     }
 }
-function minusOpaque(min,n) {
-    if(cartNo > n)
+//minus button function for setting the hover state
+function MO(min,n) {
+    if(CN > n)
     {
         min.classList.add("hover");
     } else {
@@ -349,239 +451,172 @@ function minusOpaque(min,n) {
     }
 }
 
-var formerOrder = localStorage.totalorder;
-var initialStockLeft = totalStock;
-if (formerOrder === undefined){
-    formerOrder = 0;
-} 
-
-
-var f = 0;
-
-formerOrder = parseInt(formerOrder);
-if(formerOrder > 0 && f === 0){
-    totalCartNo = formerOrder;
-    initialStockLeft = totalStock - totalCartNo;
-    stock(initialStockLeft);
-    TP = TP + (CP * totalCartNo)
-    totalCartPrice.textContent = CPV(TP);
-    orderPrice.textContent = CPV(TP);
-    noOfItems.textContent = totalCartNo;
-    noOfOrderedItems.textContent = totalCartNo;
-    noOfCartItems.textContent = totalCartNo;
-    if(totalCartNo > 1){
-    deleteItems.title = `Remove ${totalCartNo} items from cart`;
-    }
-    else {
-    deleteItems.title = `Remove ${totalCartNo} item from cart`;
-    }
-    emptyCart.style.display = "none";
-    fullCart.style.display = "flex";
-    noOfItems.style.display = "block"; 
-    noOfItems.style.animationName = "happy-ball";
-    cart.style.animationName = "happy-cart";
-    cart.classList.add('active');
-    if(totalCartNo >= totalStock)
-    {
-        addToCartButtonText.innerHTML = "Out of Stock";
-        addToCartCart.style.transform = "rotate(80deg)";
-        addToCartButton.style.opacity = "0.7";
-        CartButton(addToCartButton);
-        cartNumber.innerHTML = 0;
-        add.classList.remove("hover");
-    }
-    if(initialStockLeft > MIN){
-        cartNo = MIN;
-        cartNumber.innerHTML = cartNo;
-    } else{
-        cartNo = initialStockLeft;
-        cartNumber.innerHTML = cartNo;
-    }
-} else{
-    if(MIN !== minItems){
-    cartNumber.innerHTML = minItems;
-    stock(stockLeft);
-    } else {
-    cartNumber.innerHTML = MIN;
-    stock(stockLeft);
-    }
-}
-
-
-if((MAX > MIN) && (MAX > minItems) && (formerOrder === 0) && (f === 0)){
-    add.classList.add("hover");
- } else if((formerOrder > 0) && (f === 0)){
-    add.classList.add("hover");
- }
-
-
-var minStockLeft = stockLeft;
-addToCartButton.addEventListener('click', ()=>{
-    cartTitle.innerHTML = "Cart";
-    checkOutContent.style.display = "none";
-    stockLeft = totalStock - totalCartNo;
-    CartButton(addToCartButton);
-    addMax = MAX;
-    clickCounter ++; 
+//click event listener for the add to cart button to control the setting the stock and price values
+atcb.addEventListener('click', ()=>{
+    ct.innerHTML = "Cart";
+    coc.style.display = "none";
+    SL = TS - TCN;
+    CartButton(atcb);
+    AM = MAX;
+    CC ++; 
     f = 1;
-    if(totalCartNo < totalStock){ 
-    if(clickCounter === 1){
-        totalCartNo = 0;
-        totalCartNo = cartNo + formerOrder;
-        TP = (CP * totalCartNo);
-        if(stockLeft > MIN){
-            cartNo = MIN;
-            cartNumber.innerHTML = cartNo;
+    if(TCN < TS){ 
+    if(CC === 1){
+        TCN = CN + FO;
+        TP = (CP * TCN);
+        if(SL > MIN){
+            CN = MIN;
+            cn.innerHTML = CN;
         } else{
-            cartNo = stockLeft;
-            cartNumber.innerHTML = cartNo;
+            CN = SL;
+            cn.innerHTML = CN;
         }
-        // cartNo = 1;
-        // cartNumber.innerHTML = cartNo;
-        addOpaque(add, addMax)
-        minusOpaque(minus,MIN)
+        AO(add, AM)
+        MO(minus,MIN)
     } else {
-    totalCartNo += cartNo;
-    minStockLeft = totalStock - totalCartNo;
-    if(minStockLeft > MIN){
-        cartNo = MIN;
-        cartNumber.innerHTML = cartNo;
-    } else if(minStockLeft === 0){
-        cartNo = 0;
-        cartNumber.innerHTML = 1;
+    TCN += CN;
+    MSL = TS - TCN;
+    if(MSL > MIN){
+        CN = MIN;
+        cn.innerHTML = CN;
+    } else if(MSL === 0){
+        CN = 0;
+        cn.innerHTML = 1;
     } else{
-        cartNo = minStockLeft;
-        cartNumber.innerHTML = cartNo;
+        CN = MSL;
+        cn.innerHTML = CN;
     }
-    // cartNo = 1;
-    // cartNumber.innerHTML = cartNo;
     TP = 0;
-    TP = (CP * totalCartNo);
-    addOpaque(add, addMax)
-    minusOpaque(minus,MIN)
+    TP = (CP * TCN);
+    AO(add, AM)
+    MO(minus,MIN)
     }
-    localStorage.totalorder = totalCartNo;
-    if(totalCartNo === 0){ 
-        emptyCart.style.display = "flex";
-        fullCart.style.display = "none";
-        noOfItems.style.display = "none";
-        noOfItems.style.animationName = "";
+    localStorage.totalorder = TCN;
+    if(TCN === 0){ 
+        ec.style.display = "flex";
+        fc.style.display = "none";
+        noi.style.display = "none";
+        noi.style.animationName = "";
         cart.style.animationName = "";
     } else {
-    totalCartPrice.textContent = CPV(TP);
-    orderPrice.textContent = CPV(TP);
-    noOfItems.textContent = totalCartNo;
-    noOfOrderedItems.textContent = totalCartNo;
-    noOfCartItems.textContent = totalCartNo;
-    stock(totalStock - totalCartNo);
-    if(totalCartNo > 1){
-    deleteItems.title = `Remove ${totalCartNo} items from cart`;
+    tcp.textContent = CPV(TP);
+    op.textContent = CPV(TP);
+    noi.textContent = TCN;
+    nooi.textContent = TCN;
+    noci.textContent = `x ${TCN}`;
+    stock(TS - TCN);
+    if(TCN > 1){
+    di.title = `Remove ${TCN} items from cart`;
     }
     else {
-    deleteItems.title = `Remove ${totalCartNo} item from cart`;
+    di.title = `Remove ${TCN} item from cart`;
     }
-    emptyCart.style.display = "none";
-    fullCart.style.display = "flex";
-    noOfItems.style.display = "block"; 
-    noOfItems.style.animationName = "happy-ball";
+    ec.style.display = "none";
+    fc.style.display = "flex";
+    noi.style.display = "block"; 
+    noi.style.animationName = "happy-ball";
     cart.style.animationName = "happy-cart";
     cart.classList.add('active');
-    }} else if(checkOutClickCounter < 1){
-        addToCartButtonText.innerHTML = "Out of Stock";
-        addToCartCart.style.transform = "rotate(80deg)";
-        addToCartButton.style.opacity = "0.7";
-        cartNumber.innerHTML = 0;
-        CartButton(addToCartButton);
+    }} else if(coCC < 1){
+        atcbt.innerHTML = "Out of Stock";
+        atcc.style.transform = "rotate(80deg)";
+        atcb.style.opacity = "0.7";
+        cn.innerHTML = 0;
+        CartButton(atcb);
         add.classList.remove("hover");
 }})
-deleteCart.addEventListener('click', ()=>{
-    if (window.confirm(`You are about to remove ${totalCartNo} ${document.getElementById("product-name").innerHTML} from your cart`)){
+
+//click event listener for the delete cart button for removing all items from cart and restoring all values to default
+dc.addEventListener('click', ()=>{
+    if (window.confirm(`You are about to remove ${TCN} ${document.getElementById("product-name").innerHTML} from your cart`)){
     delete localStorage.totalorder;
-    emptyCart.style.display = "flex";
-    fullCart.style.display = "none";
-    noOfItems.style.display = "none";
-    noOfItems.style.animationName = "";
+    ec.style.display = "flex";
+    fc.style.display = "none";
+    noi.style.display = "none";
+    noi.style.animationName = "";
     cart.style.animationName = "";
     cart.classList.remove('active');
-    addToCartButton.style.opacity = "1";
-    formerOrder = 0;
-    clickCounter = 0;
+    atcb.style.opacity = "1";
+    CC = 0;
+    FO = 0;
     TP = 0;
-    totalCartNo = 0;
-    stock(totalStock);
-    cartNo = minItems;
-    addMax = MAX;
-    cartNumber.innerHTML = cartNo;
-    addToCartButtonText.innerHTML = "Add to cart";
-    addToCartCart.style.transform = "rotate(0deg)";
-    addToCartButton.style.opacity = "1";
-    CartButton(addToCartButton);
-    addOpaque(add, addMax);
-    minusOpaque(minus, minItems);}
+    TCN = 0;
+    stock(TS);
+    CN = MNI;
+    AM = MAX;
+    cn.innerHTML = CN;
+    atcbt.innerHTML = "Add to cart";
+    atcc.style.transform = "rotate(0deg)";
+    atcb.style.opacity = "1";
+    CartButton(atcb);
+    AO(add, AM);
+    MO(minus, MNI);}
 })
 
-var checkOutClickCounter = 0;
-checkOut.addEventListener('click', ()=>{
-    checkOutClickCounter++;
-    console.log(checkOutClickCounter)
-    emptyCart.style.display = "none";
-    fullCart.style.display = "none";
-    checkOutContent.style.display = "flex";
-    cartTitle.innerHTML = "Check Out";
+//click event listener for the check out button, considered one way as there is no going back until page reload
+var coCC = 0;
+co.addEventListener('click', ()=>{
+    coCC++;
+    ec.style.display = "none";
+    fc.style.display = "none";
+    coc.style.display = "flex";
+    ct.innerHTML = "Check Out";
 })
-smallPics.forEach((smallPic,i) => {  
-    smallPic.addEventListener('click', ()=>{        
-        smallPics.forEach((smallPicture) => {
-        smallPicture.className = smallPicture.className.replace(" current","");
+
+
+
+//functions for all the items images on the page
+sps.forEach((sp,i) => {  
+    sp.addEventListener('click', ()=>{        
+        sps.forEach((spture) => {
+        spture.className = spture.className.replace(" current","");
         })
-        smallPic.className += " current";
-        bigPics.forEach((bigPic,i) => {
+        sp.className += " current";
+        bps.forEach((bigPic,i) => {
             bigPic.style.display = "none";
         })
-        bigPics[i].style.display = "block";
+        bps[i].style.display = "block";
     })
 });
-bigPics.forEach((bigPicture,i) => {
-bigPicture.addEventListener('click', ()=> {
-    lightBox.style.display = "flex";
-    lightBoxOpen(slideIndex = i+1);
+bps.forEach((bp,i) => {
+bp.addEventListener('click', ()=> {
+    lb.style.display = "flex";
+    lbOpen(SIN = i+1);
 })})
 
 close.addEventListener('click', ()=>{
-    lightBox.style.display = "none";
+    lb.style.display = "none";
 })
 
-lightBoxSubs.forEach((lightBoxSub,i) => {  
-    lightBoxSub.addEventListener('click', ()=>{
-        lightBoxOpen(slideIndex = i+1);
+lbss.forEach((lbSub,i) => {  
+    lbSub.addEventListener('click', ()=>{
+        lbOpen(SIN = i+1);
     })
 });
 
-function lightBoxOpen(n){        
-    lightBoxSubs.forEach((lightBoxSubstitute) => {
-    if(n > lightBoxSubs.length){
-        slideIndex = 1;
+function lbOpen(n){        
+    lbss.forEach((lbs) => {
+    if(n > lbss.length){
+        SIN = 1;
     }
     if(n < 1){
-        slideIndex = lightBoxSubs.length;
+        SIN = lbss.length;
     }
-    lightBoxSubstitute.className = lightBoxSubstitute.className.replace(" current","");
+    lbs.className = lbs.className.replace(" current","");
     })
-    lightBoxSubs[slideIndex-1].className += " current";
-    lightBoxMains.forEach((lightBoxMain) => {
-        lightBoxMain.style.display = "none";
+    lbss[SIN-1].className += " current";
+    lbm.forEach((lbmain) => {
+        lbmain.style.display = "none";
     })
-    lightBoxMains[slideIndex-1].style.display = "block";
+    lbm[SIN-1].style.display = "block";
 }
 
 prev.addEventListener('click', ()=>{
-   slideIndex -= 1;
-   console.log(slideIndex);
-   lightBoxOpen(slideIndex);
+   SIN -= 1;
+   lbOpen(SIN);
 })
 next.addEventListener('click', ()=>{
-    slideIndex += 1;
-    console.log(slideIndex);
-    lightBoxOpen(slideIndex);
+    SIN += 1;
+    lbOpen(SIN);
 })
 
