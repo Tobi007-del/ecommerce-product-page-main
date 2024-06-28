@@ -290,8 +290,9 @@ async function registerServiceWorker(){
         const tt = "sneakers.com";
         const ops = {
             body: `Make a transfer of ${CPV(TP)} to the Zenith Account: 4230814118. Order: ${TCN} Fall Limited Edition Sneakers. `, 
-            icon:"/ecommerce-product-page-main/images/image-product-2-thumbnail.jpg", 
+            icon: "/ecommerce-product-page-main/images/image-product-2-thumbnail.jpg", 
             image: "/ecommerce-product-page-main/images/image-product-3.jpg",
+            badge: "/ecommerce-product-page-main/icons8-sneakers-75.png",
             tag: 'renotify',
             renotify: true,
         };        
