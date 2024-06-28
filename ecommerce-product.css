@@ -18,7 +18,7 @@ body{
 #page-content{
     display: flex;
     width: 100vw;
-    height: calc(100vh - 4.235em);
+    height: calc(100dvh - 4.235em);
     justify-content: center;
     align-items: center;
     overflow-x: hidden;
@@ -240,7 +240,7 @@ body{
 #no-of-items{
     display: none;
     background-color: hsl(26, 100%, 55%);
-    font-size: 1.25vh;
+    font-size: 1.25dvh;
     color: white;
     border-radius: 40%;
     min-width: 1.45em; 
@@ -250,7 +250,7 @@ body{
     position: relative;
     z-index: 1;
     left: 10px;
-    top: 1vh;
+    top: 1dvh;
     animation-duration: 5s;
     animation-iteration-count: infinite;
     animation-fill-mode: both;
@@ -829,28 +829,39 @@ body{
 
 
 @media (max-width: 480px){
+    body{
+        padding: 0;
+    }
     #content{
         padding-top: 0;
+        position: absolute;
+        top: 6.35dvh;
+        left: 0;
+        width: 100%;
+        height: fit-content;
     }
     #page-content{
-        width: 100vw;
-        height: calc(100vh - 6.235vh)
+        width: 100%;
+        height: calc(100% - 6.35dvh);
+        position: relative;
+        margin: 0;
+        padding: 0;
     }
     #main-content{
         gap: 0;
     }
     #nav-bar-container{
-        height: 6.35vh;
+        height: 6.35dvh;
         width: 100vw;
     }
     #nav-bar{
-        height: 6.35vh;
+        height: 6.35dvh;
         border-bottom: none;
         width: 100vw;
     }
     #nav-left{
         width: 60%;
-        gap: 5vw;
+        gap: 6.5vw;
         justify-content:center;
     }
     #logo-container{
@@ -858,6 +869,7 @@ body{
     }
     #nav-right{
         width: 30%;
+        justify-content: space-evenly;
     }
     #nav-menu-container{
         background-color:#f9f9f993;
@@ -865,7 +877,7 @@ body{
         top: 0;
         left: 0;
         width: 100vw;
-        height: 100vh;
+        height: 100dvh;
         z-index: 5;
         display: none;
         align-items: center;
@@ -873,9 +885,9 @@ body{
     #nav-menu{
         position: relative;
         width: 60vw;
-        height: 100vh;
+        height: 100dvh;
         padding-left: 7.5vw;
-        padding-top: 12.5vh;
+        padding-top: 12.5dvh;
         flex-flow: column nowrap;
         justify-content: start;
         gap: 0;
@@ -883,7 +895,7 @@ body{
         font-weight: 800;
     }
     .menu-item{
-        font-size: 2.2vh;
+        font-size: 2.2dvh;
         color: hsl(0, 0%, 0%);
     }
     .menu-item::after{
@@ -892,27 +904,28 @@ body{
     #close-menu{
         display: block;
         position: relative;
-        bottom: 2.5vh;
+        bottom: 2.5dvh;
         fill: #69707D;
     }
     #hamburger-icon-wrapper,#hamburger-icon{
         display: block;
     }
     #dropdown{
-        height: 6.35vh;
-        min-height: 6.235vh;
+        height: 6.35dvh;
+        min-height: 6.235dvh;
         min-width: 100%;
     }
     #cart{
         transform: scale(1);
     }
     #cart.active{
-        margin-bottom: 1.25vh;
+        margin-bottom: 1.25dvh;
     }
-    #dropdown.hover #cart{
-        fill: hsl(0, 0%, 0%)!important;
-        transform: translateX(0)!important;
-        transform: scale(1)!important;
+    #dropdown #cart{
+        fill:#69707D;
+    }
+    #dropdown #cart-dropdown{
+        display: none;
     }
     #dropdown.hover #no-of-items{
         transform: translateX(0)!important;
@@ -921,34 +934,39 @@ body{
     #dropdown.hover #cart-dropdown{
         display: flex;
     }
+    #dropdown.hover #cart{
+        fill: black!important;
+        transform: translateX(0)!important;
+        transform: scale(1)!important;
+    }
     #no-of-items{
-        font-size: 1vh;
+        font-size: 1dvh;
         border-radius: 40%;
-        min-width: 1.5vh; 
-        height: 1.25vh;
+        min-width: 1.5dvh; 
+        height: 1.25dvh;
     }
     #cart-dropdown{
-        top: 7.5vh;
+        top: 7.5dvh;
         right: 2.5vw!important;
-        height: 32.5vh;
+        height: 32.5dvh;
         width: 95vw;
-        border-radius: 1.25vh;
+        border-radius: 1.25dvh;
         box-shadow: 5px 5px 20px hsla(217, 9%, 45%, 0.8);
     }
     #cart-title{
-        height: 5.5vh;
+        height: 5.5dvh;
         padding-left: 5vw;
-        font-size: 2.25vh;
+        font-size: 2.25dvh;
     }
     #empty-cart{
-        bottom: 3.5vh;
-        height: 27vh;
+        bottom: 3.5dvh;
+        height: 27dvh;
         font-weight: 600;
-        font-size: 2.05vh;
+        font-size: 2.05dvh;
     }
     #full-cart{
-        gap: 1vh;
-        bottom: 2.5vh;
+        gap: 1dvh;
+        bottom: 2.5dvh;
     }
     #full-cart-details{
         gap: 2vw;
@@ -957,17 +975,17 @@ body{
     }
     #full-cart img{
         width: 15vw;
-        height: 7vh;
-        border-radius: 0.85vh;
+        height: 7dvh;
+        border-radius: 0.85dvh;
     }
     #cart-product-name{
-        font-size: 2.1vh;
-        top: 1.5vh;
+        font-size: 2.1dvh;
+        top: 1.5dvh;
     }
     #cart-price{
-        font-size: 2.15vh;
+        font-size: 2.15dvh;
         gap: 2vw;
-        bottom: 1.65vh;
+        bottom: 1.65dvh;
     }
     #delete-cart{
         right: 7.5vw;
@@ -977,97 +995,97 @@ body{
         fill: hsl(0, 0%, 0%);
     }
     #check-out{
-        height: 6.65vh;
+        height: 6.65dvh;
         width: 85vw;
-        bottom: 0.25vh;
-        font-size: 2vh;
-        border-radius: 1vh;
+        bottom: 0.25dvh;
+        font-size: 2dvh;
+        border-radius: 1dvh;
     }
     #check-out:hover{
         background-color: hsla(25, 100%, 55%, 1);
     }
     #check-out-content{
-        top: -1vh;
-        gap: 0vh;
-        height: 27.5vh;
+        top: -1dvh;
+        gap: 0dvh;
+        height: 27.5dvh;
     }
     #top-checkout{
-        height: 8.5vh;
+        height: 8.5dvh;
         width: 87.5vw;
         gap: 1.5vw;
     }
     #check-out-details{
-        height: 6.25vh;
-        font-size: 1.7vh;
+        height: 6.25dvh;
+        font-size: 1.7dvh;
     }
     #top-details{
-        height: 3vh;
+        height: 3dvh;
         gap: 1.5vw;
     }
     #bottom-details{
-        height: 3vh;
+        height: 3dvh;
         gap: 1.5vw;
     }
     #bottom-checkout{
         width: 87.5vw;
-        height: 12.5vh;
-        gap: 0.5vh;
+        height: 12.5dvh;
+        gap: 0.5dvh;
     }
     #account-details-container{
-        height: 4vh;
-        border-radius: 1vh;
+        height: 4dvh;
+        border-radius: 1dvh;
         gap: 19.5vw;
     }
     #zenith-logo{
-        height: 3.5vh;
+        height: 3.5dvh;
         margin-left: 2vw;
     }
     #account-number::before{
-        width: 2vh;
-        font-size: 1.2vh;
-        left: 4.5vh;
+        width: 2dvh;
+        font-size: 1.2dvh;
+        left: 4.5dvh;
     }
     #account-number{
-       font-size: 2.5vh;
+       font-size: 2.5dvh;
        letter-spacing: 1vw;
     }
     #movie-garden-div{
-        height: 7vh;
-        border-radius: 1vh;
+        height: 7dvh;
+        border-radius: 1dvh;
     }
     #movie-garden-text-container{
-        height: 1vh;
+        height: 1dvh;
         width: 100%;
     }
     #movie-garden-text{
-        font-size: 1.95vh;
+        font-size: 1.95dvh;
     }
     #tmg-link{
-       height: 3.95vh;
+       height: 3.95dvh;
        width: 72.5vw;
-       border-radius: 1vh;
+       border-radius: 1dvh;
     }
     #tmg-link span{
         letter-spacing: 0.25vw;
         word-spacing: 0.5vw;
-        font-size: 2.8vh;
+        font-size: 2.8dvh;
     }
     #order-image{
         width: 15vw;
-        height: 7vh;
-        border-radius: 0.85vh;
+        height: 7dvh;
+        border-radius: 0.85dvh;
     }
     #order-product-name{
-        font-size: 1.45vh;
+        font-size: 1.45dvh;
         color:hsl(219, 9%, 45%);
     }
     #profile-pic-picker{
-        width: 3vh;
-        height: 3vh;
+        width: 4.5dvh;
+        height: 4.5dvh;
     }
     #profile-pic,#profile-div{
-        width: 3vh;
-        height: 3vh;
+        width: 4.5dvh;
+        height: 4.5dvh;
     }
     #profile-pic{
         object-fit: cover;
@@ -1081,23 +1099,23 @@ body{
         gap: 0;
     }
     #company-name{
-        font-size: 1.65vh;
+        font-size: 1.65dvh;
         letter-spacing: 0.25vw;
         word-spacing: 0.5vw;
-        top: 1.85vh;
+        top: 1.85dvh;
     }
     #product-name{
-        font-size: 3.5vh;
-        line-height: 4vh;
+        font-size: 3.5dvh;
+        line-height: 4dvh;
     }
     #product-details{
-        font-size: 1.9vh;
-        line-height: 2.8vh;
+        font-size: 1.9dvh;
+        line-height: 2.8dvh;
     }
     #price{
         display: flex;
         flex-wrap: nowrap;
-        height: 7.5vh;
+        height: 7.5dvh;
         align-items: center;
         justify-content: space-between;
     }
@@ -1105,41 +1123,41 @@ body{
         gap: 2vw;
     }
     #current-price{
-        font-size: 3.55vh;
+        font-size: 3.55dvh;
     } 
     #discount{
-        font-size: 1.5vh;
+        font-size: 1.5dvh;
         padding: 1.25vw 1.25vw;
         border-radius: 0.75vw;
     }
     #stock{
-        font-size: 1.65vh;
+        font-size: 1.65dvh;
         border-radius: 0.75vw;
         gap: 0.95vw;
-        height: 2.75vh;
+        height: 2.75dvh;
         margin-left: 0;
         padding: 0 0.5vw 0 0.5vw;
     }
     #actual-price{
-        font-size: 1.95vh;
+        font-size: 1.95dvh;
         bottom: 0;
     }
     #actual-price::after{
-        top: 1.5vh;
+        top: 1.5dvh;
     }
     #cart-settings{
         position: relative;
-        bottom: 3vh;
+        bottom: 3dvh;
         display: flex;
         width: 100%;
         justify-content: center;
         flex-flow: row wrap;
-        gap: 1.15vh;
+        gap: 1.15dvh;
     }
     #cart-toggle{
         width: 86.5vw;
-        height: 6vh;
-        border-radius: 1.25vh;
+        height: 6dvh;
+        border-radius: 1.25dvh;
     }
     .sign{
         height: 100%;
@@ -1149,50 +1167,50 @@ body{
         font-weight: 800;
     }
     #add-to-cart{
-        height: 6vh;
+        height: 6dvh;
         width: 86.5vw;
         gap: 4.5vw;
-        border-radius: 1.25vh;
+        border-radius: 1.25dvh;
     }
     #add-to-cart:hover{
         opacity: 1;
     }
     #add-to-cart p{
         font-weight: 650;
-        font-size: 1.95vh;
+        font-size: 1.95dvh;
     }
     #pics-container{
         width: 100%;
-        height: calc(100vw - 7vh);
+        height: calc(100vw - 6.35dvh);
         padding: 0;
         visibility: hidden;
     }
     #big-pics-container{
         width: 100%;
-        height: calc(100vw - 7vh);
+        height: calc(100vw - 6.35dvh);
     }
     .big-pics{
         width: 100%;
-        height: calc(100vw - 7vh);
+        height: calc(100vw - 6.35dvh);
+        border-radius: 0;
     }
     #small-pics-containter{
         display: none;
     }
     #light-box{
         display: flex;
-        width: 100%;
         z-index: 1;
-        height: calc(100vw - 6.235vh);
-        background-color: transparent;
+        height: calc(100vw - 6.35dvh);
         position: absolute;
-        top: 6.235vh;
+        top: 6.35dvh;
+        right: 0;
     }
     #close-container{
         display: none;
     }
     .direction{
-       width: 5vh;
-       height: 5vh;
+       width: 5dvh;
+       height: 5dvh;
     }
     #prev{
         left: 14.5vw;
@@ -1204,12 +1222,12 @@ body{
         stroke: #1D2026;
     }
     #light-box-mains-container{
-        height: calc(100vw - 6.235vh);
+        height: calc(100vw - 6.235dvh);
         width: 100vw;
     }
     .light-box-main{
-        height: calc(100vw - 6.235vh);
-        width: 100%;
+        height: calc(100vw - 6.235dvh);
+        width: 100vw;
         border-radius: 0;
         object-fit: cover;
     }

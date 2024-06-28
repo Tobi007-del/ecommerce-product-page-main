@@ -123,7 +123,7 @@ function showImage(evt){
 
 
 
-var CP = 125000;
+var CP = 32550;
 var discount = 50;
 var AP = parseFloat(CP / (discount/100));
 var TP = 0;
@@ -138,8 +138,8 @@ var stockLeft = totalStock;
 var addMax = MAX;
 var minMinus = MIN;
 var clickCounter = 0;
-// var CY = "\u20A6";
-var CY = "$";
+var CY = "\u20A6";
+// var CY = "$";
 
 
 function RD(d){
