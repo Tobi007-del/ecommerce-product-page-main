@@ -33,10 +33,14 @@ var toucher = 0;
 document.getElementById("cart").addEventListener('click',()=>{
     toucher ++;
     if(toucher == 1){
-        document.getElementById("dropdown").classList.add('hover');
+        noOfItems.classList.add('hover');
+        cart.classList.add('hover');
+        document.getElementById("cart-dropdown").classList.add('hover');
     } else {
         toucher = 0;
-        document.getElementById("dropdown").classList.remove('hover');
+        noOfItems.classList.remove('hover');
+        cart.classList.remove('hover');
+        document.getElementById("cart-dropdown").classList.remove('hover');
     }
 })
 
@@ -67,7 +71,7 @@ window.addEventListener("load", () => {
     checkOut.addEventListener("click", () => {
         const title = "sneakers.com";
         const options = {
-            body: `Order: ${totalCartNo} Fall Limited Edition Sneakers. Make a transfer of ${CPV(TP)} to the Zenith Account: 4230814118`, 
+            body: `Make a transfer of ${CPV(TP)} to the Zenith Account: 4230814118. Order: ${totalCartNo} Fall Limited Edition Sneakers. `, 
             icon:"/ecommerce-product-page-main/images/image-product-2-thumbnail.jpg", 
             image: "/ecommerce-product-page-main/images/image-product-3.jpg",
             tag: 'renotify',
@@ -128,7 +132,7 @@ var discount = 50;
 var AP = parseFloat(CP / (discount/100));
 var TP = 0;
 var totalCartNo = 0;
-var totalStock = 30;
+var totalStock = 50;
 var MAX = 10;
 var MIN = 1;
 var minItems = MIN;
