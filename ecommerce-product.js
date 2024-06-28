@@ -127,7 +127,7 @@ function showImage(evt){
 
 
 
-var CP = 32000;
+var CP = 32500;
 var discount = 50;
 var AP = parseFloat(CP / (discount/100));
 var TP = 0;
@@ -142,7 +142,7 @@ var stockLeft = totalStock;
 var addMax = MAX;
 var minMinus = MIN;
 var clickCounter = 0;
-var CY = "\u20A6";
+// var CY = "\u20A6";
 // var CY = "$";
 
 
@@ -153,41 +153,61 @@ function RD(d){
         return discount.toFixed()
     }
 }
+
 function CPV(C){
+    const WN = new Intl.NumberFormat('en',{
+        style:'currency',
+        currency: 'NGN',
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0,
+    })
+    const F = new Intl.NumberFormat('en',{
+        style:'currency',
+        currency: 'NGN',
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+    })
     let th,m,b,tr;
     th = C/1000;
+    hth = C/100000;
     m = C/1000000;
     b = C/1000000000;
     tr = C/1000000000000;
-    if((th < 1) && (m < 1) && (b < 1) && (tr < 1)){
+    if((th < 1) && (hth < 1) (m < 1) && (b < 1) && (tr < 1)){
         if(((C) - Math.floor(C)) !== 0){
-            return `${CY}${C.toFixed(2)}`;
+            return `${F.format(C)}`;
         } else {
-            return `${CY}${C.toFixed(2)}`;
+            return `${F.format(C)}`;
         }
-    } else if((th >= 1) && (m < 1) && (b < 1) && (tr < 1)){
+    } else if((th >= 1) && (hth < 1) && (m < 1) && (b < 1) && (tr < 1)){
         if(((C) - Math.floor(C)) !== 0){
-            return `${CY}${C.toFixed(2)}`;
+            return `${F.format(C)}`;
         } else {
-            return `${CY}${C.toFixed()}`;
+            return `${WN.format(C)}`;
         }
-    } else if((m >= 1) && (th > 1) && (b < 1) && (tr < 1)){
+    } else if((hth >= 1) && (th > 1) && (m < 1) && (b < 1) && (tr < 1)){
+        if(((th) - Math.floor(th)) !== 0){
+            return `${F.format(th)}K`;
+        } else {
+            return `${WN.format(th)}K`;
+        }
+    } else if((m >= 1) && (th > 1) && (hth > 1) && (b < 1) && (tr < 1)){
         if(((m) - Math.floor(m)) !== 0){
-            return `${CY}${m.toFixed(2)}M`;
+            return `${F.format(m)}M`;
         } else {
-            return `${CY}${m.toFixed()}M`;
+            return `${WN.format(m)}M`;
         }        
-    } else if((b >= 1) && (th > 1) && (m > 1) && (tr < 1)){
+    } else if((b >= 1) && (th > 1) && (hth > 1) && (m > 1) && (tr < 1)){
         if(((b) - Math.floor(b)) !== 0){
-            return `${CY}${b.toFixed(2)}B`;
+            return `${F.format(b)}B`;
         } else {
-            return `${CY}${b.toFixed()}B`;
+            return `${WN.format(b)}B`;
         }        
-    } else if((tr >= 1)&& (th > 1) && (m > 1) && (b > 1)){
+    } else if((tr >= 1) && (th > 1) && (hth > 1) && (m > 1) && (b > 1)){
         if(((tr) - Math.floor(tr)) !== 0){
-            return `${CY}${tr.toFixed(2)}T`;
+            return `${F.format(tr)}T`;
         } else {
-            return `${CY}${tr.toFixed()}T`;
+            return `${WN.format(tr)}T`;
         }        
     }
 }
@@ -195,7 +215,7 @@ function CPV(C){
 document.getElementById("current-price").innerHTML = CPV(CP);
 document.getElementById("discount").innerHTML = `${RD(discount)}% Off`;
 document.getElementById("actual-price").innerHTML = CPV(AP)
-document.getElementById("actual-price").setAttribute("data-length", CPV(CP))
+document.getElementById("actual-price").setAttribute("data-length", CPV(AP))
 document.getElementById("cart-price-value").innerHTML = `${CPV(CP)} x`;
 
 

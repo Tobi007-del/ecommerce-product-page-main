@@ -980,7 +980,7 @@ body{
         top: 1.5dvh;
     }
     #cart-price{
-        font-size: 2.15dvh;
+        font-size: 2dvh;
         gap: 2vw;
         bottom: 1.65dvh;
     }
@@ -1115,35 +1115,37 @@ body{
     #price{
         display: flex;
         flex-wrap: nowrap;
-        height: 7.5dvh;
+        height: 7dvh;
         align-items: center;
         justify-content: space-between;
     }
     #price-info{
-        gap: 2vw;
+        gap: 1vw;
     }
     #current-price{
-        font-size: 3.55dvh;
+        font-size: 3.05dvh;
     } 
     #discount{
-        font-size: 1.5dvh;
-        padding: 1.25vw 1.25vw;
+        font-size: 1.15dvh;
+        padding: 0.25vw 0.25vw;
         border-radius: 0.75vw;
+        width: fit-content;
+        max-width: 6.5vw;
     }
     #stock{
-        font-size: 1.65dvh;
+        font-size: 1.3dvh;
         border-radius: 0.75vw;
         gap: 0.95vw;
-        height: 2.75dvh;
+        max-height: fit-content;
         margin-left: 0;
-        padding: 0 0.5vw 0 0.5vw;
+        padding: 0.1vh 0.5vw 0.1vh 0.5vw;
     }
     #actual-price{
-        font-size: 1.95dvh;
+        font-size: 1.5dvh;
         bottom: 0;
     }
     #actual-price::after{
-        top: 1.5dvh;
+        top: 1.15dvh;
     }
     #cart-settings{
         position: relative;
