@@ -337,7 +337,7 @@ body{
 #full-cart-details{
     display: flex;
     flex-direction: row nowrap;
-    gap: 1em;
+    gap: 0.5em;
     height: 4.5em;
     align-items: center;
     width: 19em;
@@ -966,23 +966,23 @@ body{
         bottom: 2.5dvh;
     }
     #full-cart-details{
-        gap: 2vw;
+        gap: 2.5vw;
         height: 10vh;
         width: 85vw;
     }
     #full-cart img{
-        width: 7dvh;
-        height: 7dvh;
+        width: 8dvh;
+        height: 8dvh;
         border-radius: 0.85dvh;
     }
     #cart-product-name{
-        font-size: 4.25vw;
-        top: 1.5dvh;
+        font-size: 4.05vw;
+        top: 2.75vw;
     }
     #cart-price{
-        font-size: 4.25vw;
+        font-size: 4.05vw;
         gap: 2vw;
-        bottom: 1.65dvh;
+        bottom: 3.5vw;
     }
     #delete-cart{
         right: 4vw;
@@ -1072,8 +1072,8 @@ body{
         font-size: 2.8dvh;
     }
     #order-image{
-        width: 7.5vh;
-        height: 7.5dvh;
+        width: 7vh;
+        height: 7dvh;
         border-radius: 0.85dvh;
     }
     #order-product-name{
