@@ -31,9 +31,33 @@ body{
     height: fit-content;
     gap: 6em;
 }
-@media(min-width:850px){
-    body::-webkit-scrollbar{
-        display: none;
+@media(min-width:480px){
+    #dropdown:hover #cart{
+        fill: black!important;
+        transform: translateX(0)!important;
+        transform: scale(1)!important;
+    }
+    #dropdown:hover #no-of-items{
+        transform: translateX(0)!important;
+        transform: scale(1)!important;
+    }
+    #dropdown:hover #cart-dropdown,
+    #cart-dropdown:hover{
+        display: flex;
+    }
+} 
+@media(max-width: 480px){
+    #no-of-items.hover{
+        transform: translateX(0)!important;
+        transform: scale(1)!important;
+    }
+    #cart-dropdown.hover{
+        display: flex!important;
+    }
+    #cart.hover{
+        fill: black!important;
+        transform: translateX(0)!important;
+        transform: scale(1)!important;
     }
 }
 @media(max-width: 1050px){
@@ -220,21 +244,6 @@ body{
     }
     95%{
         transform: translateX(15px);
-    }
-}
-@media(hover:hover){
-    #dropdown:hover #cart{
-        fill: black!important;
-        transform: translateX(0)!important;
-        transform: scale(1)!important;
-    }
-    #dropdown:hover #no-of-items{
-        transform: translateX(0)!important;
-        transform: scale(1)!important;
-    }
-    #dropdown:hover #cart-dropdown,
-    #cart-dropdown:hover{
-        display: flex;
     }
 }
 #no-of-items{
@@ -927,15 +936,6 @@ body{
     #dropdown #cart-dropdown{
         display: none;
     }
-    #no-of-items.hover{
-        transform: translateX(0)!important;
-        transform: scale(1)!important;
-    }
-    #cart.hover{
-        fill: black!important;
-        transform: translateX(0)!important;
-        transform: scale(1)!important;
-    }
     #no-of-items{
         font-size: 1dvh;
         border-radius: 40%;
@@ -1000,6 +1000,9 @@ body{
     }
     #check-out:hover{
         background-color: hsla(25, 100%, 55%, 1);
+    }
+    #check-out:active{
+        background-color: hsla(25, 100%, 55%, 0.8);
     }
     #check-out-content{
         top: -1dvh;
@@ -1168,10 +1171,6 @@ body{
         width: 86.5vw;
         gap: 4.5vw;
         border-radius: 1.25dvh;
-    }
-    #add-to-cart:hover{
-        background-color: hsla(25, 100%, 55%);
-        opacity: 1!important;
     }
     #add-to-cart p{
         font-weight: 650;

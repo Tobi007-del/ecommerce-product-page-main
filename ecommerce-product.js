@@ -35,12 +35,12 @@ document.getElementById("cart").addEventListener('click',()=>{
     if(toucher == 1){
         noOfItems.classList.add('hover');
         cart.classList.add('hover');
-        document.getElementById("cart-dropdown").style.display = "flex";
+        document.getElementById("cart-dropdown").classList.add('hover');
     } else {
         toucher = 0;
         noOfItems.classList.remove('hover');
         cart.classList.remove('hover');
-        document.getElementById("cart-dropdown").style.display = "none";
+        document.getElementById("cart-dropdown").classList.remove('hover');
     }
 })
 
@@ -127,7 +127,7 @@ function showImage(evt){
 
 
 
-var CP = 32550;
+var CP = 32000;
 var discount = 50;
 var AP = parseFloat(CP / (discount/100));
 var TP = 0;
