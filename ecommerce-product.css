@@ -976,16 +976,16 @@ body{
         border-radius: 0.85dvh;
     }
     #cart-product-name{
-        font-size: 4.5vw;
+        font-size: 4.25vw;
         top: 1.5dvh;
     }
     #cart-price{
-        font-size: 4.5vw;
+        font-size: 4.25vw;
         gap: 2vw;
         bottom: 1.65dvh;
     }
     #delete-cart{
-        right: 4.5vw;
+        right: 4vw;
         transform: scale(1.25);
     }
     #delete-cart:active{
@@ -1072,8 +1072,8 @@ body{
         font-size: 2.8dvh;
     }
     #order-image{
-        width: 7vh;
-        height: 7dvh;
+        width: 7.5vh;
+        height: 7.5dvh;
         border-radius: 0.85dvh;
     }
     #order-product-name{
