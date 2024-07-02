@@ -18,7 +18,9 @@ body{
 #page-content{
     display: flex;
     width: 100vw;
-    height: calc(100dvh - 4.235em);
+    /* height: calc(100dvh - 4.235em); */
+    height: auto;
+    padding: 2.5em 0 2.5em 0;
     justify-content: center;
     align-items: center;
     overflow-x: hidden;
@@ -762,9 +764,10 @@ body{
     left: 0;
     flex-flow: column nowrap;
     gap: 1.75em;
-    overflow: hidden;
-    justify-content: center;
+    overflow-x: hidden;
     align-items: center;
+    padding: 3.5em 0 0 0;
+    justify-content: start;
 }
 #close-container{
     position: relative;
@@ -827,6 +830,7 @@ body{
     align-items: center;
     display: flex;
     justify-content: space-evenly;
+    margin-bottom: 7em;
 }
 .light-box-sub{
     width: 3.5em;
@@ -836,6 +840,7 @@ body{
 .light-box-sub:hover{
     cursor: pointer;
 }
+
 
 
 @media (max-width: 480px){
