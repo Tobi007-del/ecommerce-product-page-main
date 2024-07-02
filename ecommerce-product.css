@@ -1211,6 +1211,9 @@ body{
         position: absolute;
         top: 6.35dvh;
         right: 0;
+        padding: 0;
+        justify-content: center;
+        overflow: hidden;
     }
     #close-container{
         display: none;
