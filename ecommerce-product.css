@@ -1205,7 +1205,7 @@ body{
         display: none;
     }
     #light-box{
-        display: flex;
+        display: flex!important;
         z-index: 1;
         height: calc(100vw - 6.35dvh);
         position: absolute;
