@@ -310,11 +310,11 @@ async function registerServiceWorker(){
             navigator.serviceWorker.ready.then(function(registration) {
             registration.showNotification(tt, ops);
             });
-            alert("You have to give notification permission to get the co notification");
+            alert("You have to give notification permission to get the check out notification");
           }
         });
       } else {
-        alert("You have to give notification permission to get the co notification");
+        alert("You have to give notification permission to get the check out notification");
       }
     });
 
