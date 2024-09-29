@@ -420,7 +420,7 @@ body{
     flex-flow: row wrap;
     height: 3.5em;
     font-size: 0.78em;
-    text-wrap: nowrap;
+    white-space: nowrap;
 }
 #top-details{
     display: flex;
@@ -477,7 +477,7 @@ body{
     content: 'ENITH BANK';
     width: 1em;
     font-weight: bold;
-    text-wrap: wrap;
+    white-space: wrap;
     position: absolute;
     font-size: 0.5em;
     font-family: verdana;
@@ -519,7 +519,7 @@ body{
 }
 #movie-garden-text{
     font-size: 0.85em;
-    text-wrap: nowrap;
+    white-space: nowrap;
 }
 #movie-garden-text span{
     color: var(--brand-color);
@@ -555,8 +555,8 @@ body{
     font-size: 1.5em;
     background: linear-gradient(to right,white,var(--brand-color), white);
     -webkit-text-fill-color: transparent;
-    background-clip: text;
     -webkit-background-clip: text;
+    background-clip: text;
 }
 #order-price{
     font-weight: bold;
