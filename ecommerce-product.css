@@ -707,6 +707,9 @@ body{
     align-items: center;
     justify-content: space-between;
 }
+.sign:hover {
+    cursor: not-allowed;
+}
 .sign.hover{
     opacity: 1.0;
 }
