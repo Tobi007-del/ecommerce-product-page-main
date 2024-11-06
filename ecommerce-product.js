@@ -275,7 +275,7 @@ document.getElementById("close-menu").addEventListener('click',()=>{
 async function registerServiceWorker(){
     if("serviceWorker" in navigator){
     await navigator.serviceWorker.register('e-service-worker.js').then(function(registration) {
-    console.log('Registration succeeded. ',registration);
+        console.log('Registration succeeded. ',registration);
     })
     .catch(function(error) {
       // registration failed
@@ -296,26 +296,25 @@ async function registerServiceWorker(){
             tag: 'renotify',
             renotify: true,
         };        
-      if (Notification?.permission === "granted") {
-        registerServiceWorker()
-        navigator.serviceWorker.ready.then(function(registration) {
-            registration.showNotification(tt, ops);
-        });
-        }
-
-       else if (Notification && Notification.permission !== "denied") {
-         Notification.requestPermission().then((status) => {
-        if (status === "granted") {
+        if (Notification?.permission === "granted") {
             registerServiceWorker()
             navigator.serviceWorker.ready.then(function(registration) {
-            registration.showNotification(tt, ops);
+                registration.showNotification(tt, ops);
             });
-            alert("You have to give notification permission to get the check out notification");
-          }
+        } else if (Notification && Notification.permission !== "denied") {
+            Notification.requestPermission().then((status) => {
+            if (status === "granted") {
+                registerServiceWorker()
+                navigator.serviceWorker.ready.then(function(registration) {
+                registration.showNotification(tt, ops);
+                });
+            } else {
+                alert("You have to give notification permission to get the check out notification");
+            }
         });
-      } else {
-        alert("You have to give notification permission to get the check out notification");
-      }
+        } else {
+            alert("You have to give notification permission to get the check out notification");
+        }
     });
 
 
