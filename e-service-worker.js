@@ -1,5 +1,5 @@
-console.log('e-commerce site reached service-worker.js successfully');
+console.log("e-commerce site reached service-worker.js successfully");
 
-self.addEventListener('install', () => {
+self.addEventListener("install", () => {
   self.skipWaiting();
-})
+});
